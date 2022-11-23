@@ -1,0 +1,7 @@
+D:\User\source\repos\FischersIrises\TheMethodOfLeastSquares\bin\Debug\TheMethodOfLeastSquares.exe
+D:\User\source\repos\FischersIrises\TheMethodOfLeastSquares\bin\Debug\TheMethodOfLeastSquares.pdb
+D:\User\source\repos\FischersIrises\TheMethodOfLeastSquares\obj\Debug\TheMethodOfLeastSquares.csproj.AssemblyReference.cache
+D:\User\source\repos\FischersIrises\TheMethodOfLeastSquares\obj\Debug\TheMethodOfLeastSquares.csproj.SuggestedBindingRedirects.cache
+D:\User\source\repos\FischersIrises\TheMethodOfLeastSquares\obj\Debug\TheMethodOfLeastSquares.csproj.CoreCompileInputs.cache
+D:\User\source\repos\FischersIrises\TheMethodOfLeastSquares\obj\Debug\TheMethodOfLeastSquares.exe
+D:\User\source\repos\FischersIrises\TheMethodOfLeastSquares\obj\Debug\TheMethodOfLeastSquares.pdb

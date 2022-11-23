@@ -1,0 +1,7 @@
+D:\User\source\repos\FischersIrises\CreateRandomData\bin\Debug\CreateRandomData.exe
+D:\User\source\repos\FischersIrises\CreateRandomData\bin\Debug\CreateRandomData.pdb
+D:\User\source\repos\FischersIrises\CreateRandomData\obj\Debug\CreateRandomData.csproj.AssemblyReference.cache
+D:\User\source\repos\FischersIrises\CreateRandomData\obj\Debug\CreateRandomData.csproj.SuggestedBindingRedirects.cache
+D:\User\source\repos\FischersIrises\CreateRandomData\obj\Debug\CreateRandomData.csproj.CoreCompileInputs.cache
+D:\User\source\repos\FischersIrises\CreateRandomData\obj\Debug\CreateRandomData.exe
+D:\User\source\repos\FischersIrises\CreateRandomData\obj\Debug\CreateRandomData.pdb
