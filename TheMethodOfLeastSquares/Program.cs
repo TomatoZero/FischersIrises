@@ -34,14 +34,15 @@ namespace TheMethodOfLeastSquares
                 }
             }
 
-            var output = FindNext(briefInput);
+            var output = FindCoefficients(briefInput);
+            var forecast = output.a * input.Count - 1 + output.b;
             var real = input[input.Count - 1];
 
-            Console.WriteLine($"Next year {real[1]} Calculated value {output}. Real value {real[0]}. Error {real[0] - output}");
+            Console.WriteLine($"Next year {real[1]} Calculated value {forecast}. Real value {real[0]}. Error {(Math.Abs(real[0] - forecast) / real[0])* 100}");
             
         }
 
-        public static double FindNext(double[,] input)
+        public static (double a, double b) FindCoefficients(double[,] input)
         {
             var numb = 0d;
             var sumY = 0d;
@@ -58,19 +59,17 @@ namespace TheMethodOfLeastSquares
             var a = (numb - ((sumX * sumY) / n)) / (sumSquaresX - ((sumX * sumX) / n));
             var b = (sumY / n) - (a * sumX) / n;
 
-            var meanAbsoluteError = new double[n];
-            var sumMeanAbsoluteError = 0d;
-            for (var i = 0; i < n; i++)
-            {
-                var theoreticalY = (a * (i + 1)) + b;
-
-                meanAbsoluteError[i] = (Math.Abs(input[i, 0] - theoreticalY) / input[i, 0]) * 100;
-                sumMeanAbsoluteError += meanAbsoluteError[i];
-            }
-
-            Console.WriteLine($"Sum mean {sumMeanAbsoluteError}");
+            // var meanAbsoluteError = new double[n];
+            // var sumMeanAbsoluteError = 0d;
+            // for (var i = 0; i < n; i++)
+            // {
+            //     var theoreticalY = (a * (i + 1)) + b;
+            //
+            //     meanAbsoluteError[i] = (Math.Abs(input[i, 0] - theoreticalY) / input[i, 0]) * 100;
+            //     sumMeanAbsoluteError += meanAbsoluteError[i];
+            // }
             
-            return (a * (n + 1)) + b;
+            return (a, b);
         }
         
         

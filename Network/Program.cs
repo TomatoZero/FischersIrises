@@ -19,7 +19,7 @@ namespace NeuralNetwork
             var hideLayers = new HideLayer[10];
             for (var i = 0; i < hideLayers.Length; i++)
                 hideLayers[i] = new HideLayer(7,  i == 0 ? inputLayer.Data[i].Length : hideLayers[i - 1].Neurons.Length, NeuronType.Hiden,
-                    $"fishersIrises/{nameof(hideLayers)}.txt", true);
+                    $"fishersIrises/{nameof(hideLayers)}{i}.txt", true);
             var outputLayer = new OutputLayer(3, hideLayers[1].Neurons.Length, NeuronType.Output,
                 $"fishersIrises/{nameof(OutputLayer)}.txt", true);
             
