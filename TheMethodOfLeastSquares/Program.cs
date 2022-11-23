@@ -25,7 +25,7 @@ namespace TheMethodOfLeastSquares
             //
             // Console.WriteLine($"{n+1} {FindNext(input)}");
 
-            var input = GetData("input.txt");
+            var input = GetData("input2.txt");
             var briefInput = new double[input.Count - 1, input[0].Length];
 
             for (var i = 0; i < briefInput.GetLongLength(0); i++) {
@@ -39,7 +39,13 @@ namespace TheMethodOfLeastSquares
             var real = input[input.Count - 1];
 
             Console.WriteLine($"Next year {real[1]} Calculated value {forecast}. Real value {real[0]}. Error {(Math.Abs(real[0] - forecast) / real[0])* 100}");
-            
+            var n = int.Parse(Console.ReadLine() ?? string.Empty);
+
+            for (var i = 2; i < n + 2; i++) {
+                forecast = output.a * (input.Count - 1 + i) + output.b;
+                Console.WriteLine($"Next year {input.Count - 1 + i} Calculated value {forecast}.");
+            }
+
         }
 
         public static (double a, double b) FindCoefficients(double[,] input)
