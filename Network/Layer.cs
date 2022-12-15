@@ -11,7 +11,7 @@ namespace NeuralNetwork
     {
         protected int _numNeurons;
         protected int _numPrevNeurons;
-        protected const double _learniingRate = 0.001d;
+        protected const double _learniingRate = 0.00000001d;
         protected Neuron[] _neurons;
 
         private string _weightFilePath;
@@ -89,13 +89,36 @@ namespace NeuralNetwork
         }
         public double[] Recognize() {
             var output = new double[_numNeurons];
-            for (int i = 0; i < Neurons.Length; i++) {
+            for (int i = 0; i < Neurons.Length; i++) 
                 output[i] = Neurons[i].Output;
-            }
-
             return output;
         }
 
-        public abstract double[] BackwardPass(double[] stuff, bool calculateGradient);
+        protected double[] Softmax(double[] t) {
+            var exp = new double[t.Length];
+            for (int i = 0; i < t.Length; i++) 
+                exp[i] = Math.Exp(t[i]);
+            var sum = exp.Sum();
+
+            var softmax = new double[exp.Length];
+            for (int i = 0; i < exp.Length; i++)
+                softmax[i] = exp[i] / sum;
+            return softmax;
+        }
+
+        protected double CrossEntropy(double[] softmax, double[] expectedResult) {
+            if (softmax.Length != expectedResult.Length)
+                throw new ArgumentException();
+
+            var sum = 0d;
+            for (int i = 0; i < softmax.Length; i++)
+                sum += expectedResult[i] * Math.Log(softmax[i]);
+            
+            return -sum;
+        }
+
+        public abstract double[] BackProp(double[] stuff);
+        
+        
     }
 }

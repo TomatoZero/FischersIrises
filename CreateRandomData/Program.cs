@@ -7,7 +7,7 @@ using System.Timers;
 namespace CreateRandomData {
     internal class Program {
         public static void Main(string[] args) {
-            CreateCarrData("InputData.txt", "OutputData.txt", 50);
+            CreateCarrData("InputData.txt", "OutputData.txt", 20);
         }
 
         public static List<double[]> CreateCarrData(string fileNameInput, string fileNameOutput, int numbPerClass) {
@@ -18,16 +18,20 @@ namespace CreateRandomData {
             using(var writer = new StreamWriter(fileNameOutput, false)) {
                 for (var i = 0; i < AllClassType.Count; i++) {
                     for (var j = 0; j < numbPerClass; j++) {
-                        writer.Write(RandomDoubleBetween(AllClassType[i].Length, rnd) + " ");
-                        writer.Write(RandomDoubleBetween(AllClassType[i].Width, rnd) + " ");
-                        writer.Write(RandomDoubleBetween(AllClassType[i].Height, rnd) + " ");
-                        writer.Write(RandomDoubleBetween(AllClassType[i].DistanceBetweenWheels, rnd) + " ");
-                        writer.Write(RandomDoubleBetween(AllClassType[i].GroundClearance, rnd) + " ");
-                        writer.Write(RandomDoubleBetween(AllClassType[i].EngineVolume, rnd) + " ");
-                        writer.Write(RandomDoubleBetween(AllClassType[i].Weight, rnd) + " ");
-                        writer.Write(RandomDoubleBetween(AllClassType[i].Speed, rnd) + " ");
-                        writer.Write(RandomDoubleBetween(AllClassType[i].HundredIn3Sec, rnd) + " ");
-                        writer.Write(RandomDoubleBetween(AllClassType[i].LiterPerHundredMil, rnd) + " ");
+                        
+                        if(AllClassType[i].ClassType == "SUV")
+                            continue;
+                        
+                        writer.Write(RandomDoubleBetween(AllClassType[i].Length, rnd).ToString("0.") + " ");
+                        writer.Write(RandomDoubleBetween(AllClassType[i].Width, rnd).ToString("0.") + " ");
+                        writer.Write(RandomDoubleBetween(AllClassType[i].Height, rnd).ToString("0.") + " ");
+                        writer.Write(RandomDoubleBetween(AllClassType[i].DistanceBetweenWheels, rnd).ToString("0.") + " ");
+                        writer.Write(RandomDoubleBetween(AllClassType[i].GroundClearance, rnd).ToString("0.00") + " ");
+                        // writer.Write(RandomDoubleBetween(AllClassType[i].EngineVolume, rnd).ToString("0.00") + " ");
+                        writer.Write(RandomDoubleBetween(AllClassType[i].Weight, rnd).ToString("0.00") + " ");
+                        writer.Write(RandomDoubleBetween(AllClassType[i].Speed, rnd).ToString("0.") + " ");
+                        writer.Write(RandomDoubleBetween(AllClassType[i].HundredIn3Sec, rnd).ToString("0.00") + " ");
+                        // writer.Write(RandomDoubleBetween(AllClassType[i].LiterPerHundredMil, rnd).ToString("0.00") + " ");
                         writer.Write(AllClassType[i].ClassType + "\n");
                     }
                 }

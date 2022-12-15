@@ -8,89 +8,88 @@ namespace NeuralNetwork
 {
     internal class HideLayer : Layer
     {
-        public HideLayer(int numNeurons, int numPrevNeurons, NeuronType neurontype, string weightFilePath, bool randomWeights = false) : base(numNeurons, numPrevNeurons, neurontype, weightFilePath, randomWeights)
+        public HideLayer(int numNeurons, int numPrevNeurons, NeuronType neurontype, string weightFilePath, 
+            bool randomWeights = false) : base(numNeurons, numPrevNeurons, neurontype, weightFilePath, randomWeights)
         { }
 
-        public override double[] BackwardPass(double[] gradientsSum, bool calculateGradient = false) {
-            var thisNeuronsGradients = new double[_numNeurons];
+        public override double[] BackProp(double[] deDh) {
+            var deDt = new double[_numNeurons];
+
+            for (int i = 0; i < deDh.Length; i++) 
+                deDt[i] = deDh[i] * Neurons[i].Derevativator(Neurons[i].AdderResult);
             
-            for (var i = 0; i < _numNeurons; i++) {
-                var sumInputErrors = gradientsSum[i]; 
-                var neuronOutput = Neurons[i].Output;
-                var derivation = Neurons[i].Derevativator(neuronOutput);
-
-                if (calculateGradient)
-                    thisNeuronsGradients[i] = derivation * Neurons[i].Gradientor(0d, derivation, gradientsSum[i]);
-                
-                var magnitudeError = sumInputErrors * derivation;
-                var deltaW = _learniingRate * magnitudeError * neuronOutput;
-
-                for (var j = 0; j < Neurons[i].Weights.Length; j++)
-                    Neurons[i].Weights[j] += deltaW;
+            var deDx = new double[_numPrevNeurons];
+            for (int i = 0; i < _numPrevNeurons; i++) {
+                var sum = 0d;
+                for (int j = 0; j < _numNeurons; j++) 
+                    sum += deDt[j] * Neurons[j].Weights[i];
+                deDx[i] = sum;
             }
-
-            if (calculateGradient) {
-                var newGradientSum = new double[_numPrevNeurons];
-
-                for (var i = 0; i < _numPrevNeurons; i++) {
-                    var sum = 0d;
-                    for (var j = 0; j < _numNeurons; j++) 
-                        sum += _neurons[j].Weights[i] * gradientsSum[j];
-                    
-                    newGradientSum[i] = sum;
+            
+            
+            for (int i = 0; i < _numNeurons; i++) {
+                var neuron = Neurons[i];
+                var deDw = 0d;
+                for (int j = 0; j < _numPrevNeurons; j++) {
+                    deDw = deDt[i] * neuron.Inputs[j];
+                    neuron.Weights[j] -= _learniingRate * deDw;
                 }
-
-                return newGradientSum;
             }
             
-            return null;
+            return deDx;
         }
-
-
     }
 
     internal class OutputLayer : Layer {
         public bool _single = false;
-        public OutputLayer(int numNeurons, int numPrevNeurons, NeuronType neurontype, string weightFilePath, bool randomWeights = false) : base(numNeurons, numPrevNeurons, neurontype, weightFilePath, randomWeights)
+        public OutputLayer(int numNeurons, int numPrevNeurons, NeuronType neurontype, string weightFilePath, 
+            bool randomWeights = false) : base(numNeurons, numPrevNeurons, neurontype, weightFilePath, randomWeights)
         { }
 
-        public override double[] BackwardPass(double[] errors, bool calculateGradient = true) {
-            if (_single)
-                throw new Exception();
-                
-            var gradients = new double[_numNeurons];
+        public override double[] BackProp(double[] expectedResult) {
+            var deDh = VectorGradient(expectedResult);
+            var deDt = deDh;
             
-            for (var i = 0; i < _numNeurons; i++) {
-                var neuronOutput = Neurons[i].Output;
-                var derivation = Neurons[i].Derevativator(neuronOutput);
-                gradients[i] = Neurons[i].Gradientor(errors[i], derivation, 0d);
+            var deDx = new double[_numPrevNeurons];
+            for (int i = 0; i < _numPrevNeurons; i++) {
+                var sum = 0d;
+                for (int j = 0; j < _numNeurons; j++) 
+                    sum += deDt[j] * Neurons[j].Weights[i];
+                deDx[i] = sum;
+            }
 
-                var deltaW = _learniingRate * gradients[i] * neuronOutput;
-                for (var j = 0; j < Neurons[i].Weights.Length; j++) {
-                    Neurons[i].Weights[j] += deltaW;
+            for (int i = 0; i < _numNeurons; i++) {
+                var neuron = Neurons[i];
+                var deDw = 0d;
+                for (int j = 0; j < _numPrevNeurons; j++) {
+                    deDw = deDt[i] * neuron.Inputs[j];
+                    neuron.Weights[j] -= _learniingRate * deDw;
                 }
             }
-
-            var gradientsSum = new double[_numPrevNeurons];
-            for (var i = 0; i < _numPrevNeurons; i++) {
-                var sum = 0d;
-                for (var j = 0; j < _numNeurons; j++) 
-                    sum += _neurons[j].Weights[i] * gradients[j];
-                gradientsSum[i] = sum;
-            }
-
-            return gradientsSum;
+            
+            return deDx;
         }
 
-        public void ChangeWeights(double[] errors, double[] output, double[] data) {
+        private double[] VectorGradient(double[] expectedResult) {
+            var adderResult = new double[_numNeurons];
+
+            for (int i = 0; i < _numNeurons; i++) 
+                adderResult[i] = Neurons[i].AdderResult;
+            var z = Softmax(adderResult);
+            var gradient = new double[_numNeurons];
+            for (int i = 0; i < _numNeurons; i++) 
+                gradient[i] = z[i] - expectedResult[i];
+
+            return gradient;
+        }
+        
+        public void ChangeWeights(double[] errors, double[] data) {
             if (!_single)
                 throw new Exception();
 
-            for (var i = 0; i < _numNeurons; i++) {
-                for (var j = 0; j < _numPrevNeurons; j++) {
+            for (var i = 0; i < _numNeurons; i++) 
+                for (var j = 0; j < _numPrevNeurons; j++) 
                     _neurons[i].Weights[j] += _learniingRate * errors[i] * data[j];
-                }
-            }
         }
 
         public void ChangeWeights(double deltaL) {
